@@ -26,9 +26,7 @@ export default async function ArticlesPage() {
       <ul className="space-y-4">
         {articles.map((article) => (
           <li key={article.slug} className="border-b pb-2">
-            <Link href={`/articles/${article.slug}`}> 
-              <a className="text-xl text-blue-600 hover:underline">{article.title}</a>
-            </Link>
+            <Link href={`/articles/${article.slug}`} className="text-xl text-blue-600 hover:underline">{article.title}</Link>
             <p className="text-sm text-gray-500">{article.date}</p>
           </li>
         ))}
