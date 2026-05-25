@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 interface ArticleMeta {
   title: string;
-  date: string;
+  date: string; // formatted string
   slug: string;
 }
 
@@ -17,8 +17,10 @@ export default async function ArticlesPage() {
     const fullPath = path.join(articlesDir, fileName);
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data } = matter(fileContents);
-    return { slug, title: data.title as string, date: data.date as string };
-  }).sort((a, b) => (a.date < b.date ? 1 : -1));
+    // Ensure date is a string for rendering
+    const dateStr = data.date ? new Date(data.date).toLocaleDateString('id-ID') : '';
+    return { slug, title: data.title as string, date: dateStr };
+  }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <div className="max-w-2xl mx-auto p-4">
@@ -26,7 +28,9 @@ export default async function ArticlesPage() {
       <ul className="space-y-4">
         {articles.map((article) => (
           <li key={article.slug} className="border-b pb-2">
-            <Link href={`/articles/${article.slug}`} className="text-xl text-blue-600 hover:underline">{article.title}</Link>
+            <Link href={`/articles/${article.slug}`} className="text-xl text-blue-600 hover:underline">
+              {article.title}
+            </Link>
             <p className="text-sm text-gray-500">{article.date}</p>
           </li>
         ))}
